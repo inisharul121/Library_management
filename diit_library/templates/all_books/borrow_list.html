@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <main>
+    <div class="container">
+    <div class="table-responsive text-nowrap">
+    <h4 text-align="center"> Your Books List </h4>
+    <br>
+    <br>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Book title</th>
+            <th scope="col">Author</th>
+            <th scope="col">Add Date</th>
+            <th scope="col">Return Date</th>
+            <th scope="col">Remove from list</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for book_item in object.items.all %}
+        <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ book_item.borrow_book.name }}</td>
+            <td>{{ book_item.borrow_book.author }}</td>
+            <td>{{ book_item.date_added }}</td>
+            <td>{{ object.get_return_date }}</td>
+            <td ><a class="btn btn-danger btn-md my-0 p ml-2" href="{% url 'remove-from-cart' book_item.borrow_book.slug %}"><i class="fas fa-trash-alt"></i></a>
+            
+            </td> 
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan='5'>Your list is empty</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+        <div class="col-sm-5">
+            <form  action="{{ object.get_borrow_confirmation }}" method="POST">
+				{% csrf_token %}
+				<div class="form-row">
+				<button class="btn btn-outline-info float-right" type="submit">Confirm Request</button> 
+				</div>
+                <br>
+                <div>
+                <a class="btn btn-outline-info btn-md my-0 p" href="{% url 'home' %}">Continue Adding Books</a>
+                </div>
+			</form>   
+        </div>
+        
+    </div>
+
+    </div>
+  </main>
+
+{% endblock content %}
